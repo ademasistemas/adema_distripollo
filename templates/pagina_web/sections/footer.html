@@ -1,0 +1,34 @@
+<footer style="background: {{ landing.get_footer_background }}; color: {{ landing.get_footer_font_color }};">
+    <div class="container">
+        <br>
+        <div class="footer-content">
+            <!-- Logo -->
+            <div class="footer-column footer-left">
+                {% if landing.logo %}
+                    <img src="{{ landing.logo.url }}" alt="Logo de {{ landing.title }}" class="footer-logo">
+                {% endif %}
+            </div>
+
+            <!-- Bloque de Contacto -->
+            <div class="footer-column footer-center">
+                <h4>Contacto</h4>
+                <p>☎️ {{ landing.contact_phone }}</p>
+                <p>✉️
+                    <a href="mailto:{{ landing.contact_email }}" style="color: {{ landing.get_footer_font_color }};">{{ landing.contact_email }}</a>
+                </p>
+            </div>
+
+            <!-- Bloque de Ubicación -->
+            <div class="footer-column footer-right">
+                <h4>Ubicación</h4>
+                <p>{{ landing.address|linebreaks }}</p>
+                <p><strong>Horario:</strong><br>{{ landing.schedule|linebreaks }}</p>
+            </div>
+        </div>
+
+        <br>
+        <!-- Copyright -->
+        <p class="copyright">&copy; {{ anio_actual }} {{ landing.title }}. Todos los derechos reservados.</p>
+    
+    </div>
+</footer>

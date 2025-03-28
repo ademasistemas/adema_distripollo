@@ -1,0 +1,724 @@
+
+/* Estilos generales */
+:root {
+    --color-primary: #0e0e0e;
+    --color-secondary: #434a4f;
+    --color-accent: rgb(136, 135, 135);
+    --color-text: #333;
+    --color-background: #f9f9f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    margin-bottom: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Header */
+header {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--color-accent-hover);
+}
+
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+/* Hero Section */
+/* Hero Section (para pantallas grandes) */
+.hero {
+    background-color: #f0f0f0;
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Mantiene el hero a pantalla completa */
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos estén en columna */
+    align-items: center;
+    justify-content: center; /* Centra los elementos verticalmente */
+    text-align: center;
+    color: white;
+    position: relative;
+    padding: 20px; /* Espaciado interno para evitar que los elementos queden muy pegados al borde */
+}
+
+.hero h1 {
+    font-size: 3.5rem; /* Tamaño grande del título */
+    margin-bottom: 20px;
+    transition: font-size 0.3s ease; /* Transición suave para tamaños */
+}
+
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    transition: font-size 0.3s ease;
+}
+
+/* Hero Section (responsive para pantallas más pequeñas) */
+@media (max-width: 1024px) {
+    .hero {
+        height: 80vh; /* Reduce el alto para pantallas más pequeñas */
+        padding: 15px;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem; /* Reduce el tamaño del título */
+    }
+
+    .hero h3 {
+        font-size: 1.2rem; /* Reduce el tamaño de la descripción */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 70vh; /* Ajusta más el alto para móviles */
+        padding: 10px;
+    }
+
+    .hero h1 {
+        font-size: 2rem; /* Título más pequeño en móviles */
+    }
+
+    .hero h3 {
+        font-size: 1rem; /* Descripción más pequeña en móviles */
+    }
+}
+
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--color-secondary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-secondary);
+}
+
+/* About Section */
+/* Sección About - Estilo general */
+.about .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Espacio entre columnas */
+    gap: 40px;
+    padding: 20px;
+}
+
+.about img {
+    max-width: 40%; /* Imagen ocupa el 40% del contenedor */
+    height: auto;
+    border-radius: 10px;
+    margin: 40px 0px 40px 0px;
+}
+
+.about-content {
+    flex: 1; /* La columna de texto ocupa el espacio restante */
+    text-align: left; /* Alinea el texto a la izquierda */
+}
+
+.about h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.about p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Diseño responsivo para pantallas pequeñas (móviles) */
+@media (max-width: 768px) {
+    .about .container {
+        flex-direction: column; /* Pasa a una disposición en columna */
+        text-align: center; /* Centra el texto y la imagen */
+    }
+
+    .about img {
+        max-width: 80%; /* La imagen se ajusta al 80% del ancho del contenedor */
+        margin-bottom: 20px; /* Espacio entre la imagen y el texto */
+    }
+
+    .about-content {
+        text-align: center; /* Centra el contenido de texto */
+    }
+}
+
+
+/* menu de cards */
+
+
+/* Sección Especialidades */
+/* Sección Especialidades */
+.specialties {
+    padding: 80px 0;
+}
+
+.specialties h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem; /* Tamaño base para pantallas grandes */
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Diseño con Grid */
+.specialty-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas en pantallas grandes */
+    gap: 20px; /* Espacio entre las cards */
+}
+
+/* Cards */
+.card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+    color: inherit;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Imagen cuadrada y responsiva */
+.card img {
+    width: 100%; /* Que la imagen siempre ocupe el contenedor */
+    height: 250px; /* Altura fija para que sea cuadrada */
+    object-fit: cover; /* Cubre el área sin deformarse */
+}
+
+/* Títulos y párrafos */
+.card h3 {
+    margin: 10px 0;
+    font-size: 1.3rem;
+}
+
+.card p {
+    margin: 0 10px 15px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* Diseño responsivo para tablets y móviles */
+@media (max-width: 1024px) {
+
+    .specialty-cards {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+    }
+    .specialty-cards h2 {
+        font-size: 2rem; /* Reduce el tamaño del título */
+    }
+}
+
+@media (max-width: 768px) {
+
+    .specialty-cards {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+        gap: 15px; /* Espacio más pequeño entre cards */
+    }
+    .specialty-cards h2 {
+        font-size: 1.8rem; /* Tamaño aún más pequeño */
+    }
+}
+
+@media (max-width: 480px) {
+    .specialty-cards h2 {
+        font-size: 1.5rem; /* Tamaño más reducido para móviles pequeños */
+    }
+}
+/*  fin cards section */
+
+
+/* Menu Section */
+.menu {
+    padding: 80px 0;
+    background-color: var(--color-accent);
+}
+
+.menu h2 {
+    text-align: center;
+    color: white;
+}
+
+.menu-categories {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.category {
+    flex: 1;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category h3 {
+    color: var(--color-primary);
+    margin-bottom: 20px;
+}
+
+.category ul {
+    list-style-type: none;
+}
+
+.category li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.dish {
+    font-weight: bold;
+}
+
+.price {
+    color: var(--color-secondary);
+}
+
+/* Specialties Section */
+/* Sección Especialidades */
+.specialties {
+    padding: 80px 0;
+}
+
+.specialties h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+}
+
+.specialty-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas en pantallas grandes */
+    gap: 20px; /* Espaciado entre las cards */
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+    color: inherit; /* Hereda el color de texto dinámico */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover; /* Asegura que la imagen cubra sin distorsionarse */
+}
+
+.card h3 {
+    padding: 15px 10px 5px;
+    font-size: 1.5rem;
+}
+
+.card p {
+    padding: 0 10px 15px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* Diseño responsivo para tablets y móviles */
+@media (max-width: 1024px) {
+    .specialty-cards {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .specialty-cards {
+        grid-template-columns: repeat(2, 1fr); /* Mantiene 2 columnas en móviles */
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .specialty-cards {
+        grid-template-columns: 1fr; /* 1 columna en pantallas muy pequeñas */
+    }
+}
+
+
+
+/* Testimonios */
+.testimonials {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.testimonials h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    
+}
+
+/* Carrusel de testimonios */
+.testimonial-carousel {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Testimonio individual */
+.testimonial {
+    flex: 1 1 calc(33.333% - 20px);
+    max-width: 400px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.testimonial:hover {
+    transform: translateY(-5px);
+}
+
+.testimonial p {
+    font-style: italic;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.testimonial .author {
+    display: block;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Logo del testimonio */
+.testimonial-logo {
+    margin-bottom: 15px; /* Espacio entre el logo y el contenido */
+    text-align: center;
+}
+
+.testimonial-logo img {
+    width: 80px; /* Tamaño del logo */
+    height: 80px;
+    object-fit: contain; /* Asegura que el logo se ajuste sin deformarse */
+    border-radius: 50%; /* Hace que el logo sea circular */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Diseño responsivo */
+@media (max-width: 1024px) {
+    .testimonial {
+        flex: 1 1 calc(50% - 20px); /* 2 columnas en tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonial {
+        flex: 1 1 calc(100% - 20px); /* 1 columna en móviles */
+    }
+
+    .testimonials h2 {
+        font-size: 2rem;
+    }
+}
+
+
+/* Footer */
+/* Footer */
+footer {
+    padding: 40px 20px;
+    background-color: #333; /* Cambiable con landing.get_footer_background */
+    color: white; /* Cambiable con landing.get_footer_font_color */
+    font-size: 1rem;
+}
+
+footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between; /* Espacio igual entre columnas */
+    align-items: center; /* Centra verticalmente los contenidos */
+    gap: 20px;
+}
+
+.footer-column {
+    flex: 1; /* Cada columna ocupa el mismo espacio */
+    text-align: center;
+}
+
+/* Logo */
+.footer-left .footer-logo {
+    max-width: 100px; /* Tamaño fijo del logo */
+    height: auto;
+    margin: 0 auto;
+}
+
+/* Contacto y Ubicación */
+.footer-center h4,
+.footer-right h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.footer-center p,
+.footer-right p {
+    margin: 5px 0;
+    line-height: 1.6;
+}
+
+footer a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--color-accent, #ff9800);
+}
+
+/* Copyright */
+footer .copyright {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column; /* Columnas en una sola fila */
+        text-align: center;
+    }
+
+    .footer-column {
+        margin-bottom: 20px; /* Espacio entre las columnas */
+    }
+
+    .footer-logo {
+        max-width: 80px; /* Logo más pequeño en dispositivos pequeños */
+    }
+}
+
+
+/* WhatsApp Button */
+.whatsapp-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.whatsapp-button:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    nav ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--color-primary);
+        flex-direction: column;
+        padding: 20px 0;
+    }
+
+    nav ul.show {
+        display: flex;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    .about .container {
+        flex-direction: column;
+    }
+
+    .about img {
+        max-width: 100%;
+    }
+
+    .menu-categories,
+    .specialty-cards {
+        flex-direction: column;
+    }
+
+    .contact-info {
+        flex-direction: column;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+.cta-button {
+    display: inline-block; /* Esto asegura que el botón no ocupe el ancho completo */
+    margin: 20px auto; /* Agrega margen alrededor y centra verticalmente */
+    padding: 12px 24px; /* Espaciado interno para el botón */
+
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+
+/* Título Especialidades (Responsivo) */
+.specialties h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem; /* Tamaño base para pantallas grandes */
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Ajuste del título para pantallas medianas */
+@media (max-width: 1024px) {
+    .specialties h2 {
+        font-size: 2rem; /* Reduce el tamaño del título */
+    }
+}
+
+/* Ajuste del título para pantallas pequeñas */
+@media (max-width: 768px) {
+    .specialties h2 {
+        font-size: 1.8rem; /* Tamaño aún más pequeño */
+    }
+}
+
+/* Ajuste para móviles más pequeños */
+@media (max-width: 480px) {
+    .specialties h2 {
+        font-size: 1.5rem; /* Tamaño más reducido para móviles pequeños */
+    }
+}
+

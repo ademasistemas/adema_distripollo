@@ -1,0 +1,207 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #212529;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #fff;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    height: 60px;
+}
+
+#search-bar {
+    padding: 0.5rem;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+main {
+    flex: 1;
+    margin-left: 2rem;
+}
+
+.tutorial-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.tutorial-section h2 {
+    font-size: 1.8rem;
+    padding: 1rem;
+    background-color: #212529;
+    color: #fff;
+    cursor: pointer;
+}
+
+.subsection {
+    display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start; /* Alinea los elementos al inicio */
+}
+
+.subsection-content {
+    flex: 1;
+    padding-right: 1rem;
+    min-width: 0; /* Permite que el contenido se ajuste */
+}
+
+.subsection h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: rgb(30, 41, 52);
+}
+
+.subsection p {
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.video-container {
+    flex: 1;
+    position: relative;
+    padding-bottom: 28.125%; /* 16:9 aspect ratio (9 / 16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+    min-width: 50%; /* Asegura que el video ocupe al menos la mitad del ancho */
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.timeline {
+    width: 200px;
+    position: sticky;
+    top: 100px;
+    align-self: flex-start;
+}
+
+.timeline ul {
+    list-style-type: none;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.timeline li {
+    border-bottom: 1px solid #eee;
+}
+
+.timeline li:last-child {
+    border-bottom: none;
+}
+
+.timeline a {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.timeline a:hover, .timeline a.active {
+    background-color: #212529;
+    color: #fff;
+}
+
+.tutorial-section.collapsed .subsection {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    main {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
+    .timeline {
+        width: 100%;
+        position: static;
+        margin-bottom: 1rem;
+    }
+
+    .timeline ul {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .timeline li {
+        flex: 1 1 auto;
+        border-bottom: none;
+        border-right: 1px solid #eee;
+    }
+
+    .timeline li:last-child {
+        border-right: none;
+    }
+
+    #main-nav {
+        flex-direction: column;
+    }
+
+    .logo {
+        margin-bottom: 1rem;
+    }
+
+    #search-bar {
+        width: 100%;
+    }
+
+    .subsection {
+        flex-direction: column;
+    }
+
+    .subsection-content {
+        padding-right: 0;
+        padding-bottom: 1rem;
+    }
+
+    .video-container {
+        padding-bottom: 56.25%; /* Vuelve a 16:9 para móviles */
+        width: 100%;
+    }
+}

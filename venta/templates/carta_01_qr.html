@@ -1,0 +1,627 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Bites - Restaurante Gourmet en [Tu Ciudad]</title>
+    <meta name="description" content="Disfruta de la mejor cocina gourmet en Delicious Bites. Platos exquisitos, ambiente acogedor y servicio excepcional en el corazón de [Tu Ciudad].">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e74c3c;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #e74c3c;
+        }
+
+        .burger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        main {
+            padding-top: 80px;
+        }
+
+        section {
+            padding: 4rem 5%;
+        }
+
+        .hero {
+            background-image: url("{% static 'header_placeholder.png' %}");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #e74c3c;
+        }
+
+        .about-content, .chef-content, .location-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .about-content img, .chef-content img {
+            max-width: 50%;
+            border-radius: 8px;
+        }
+
+        .about-text, .chef-bio {
+            flex: 1;
+        }
+
+        .featured-dishes, .event-list {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .dish, .event {
+            flex-basis: calc(33.33% - 2rem);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .dish img, .event img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .dish h3, .event h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu {
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .qr-code {
+            max-width: 200px;
+            margin: 2rem auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .testimonial-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .testimonial {
+            flex-basis: calc(33.33% - 2rem);
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .testimonial p {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial .author {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .map img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .contact-form button {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #c0392b;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 2rem 5%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex-basis: calc(33.33% - 2rem);
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #555;
+        }
+
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: #fff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #128c7e;
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                right: 0px;
+                height: 92vh;
+                top: 8vh;
+                background-color: #fff;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 50%;
+                transform: translateX(100%);
+                transition: transform 0.5s ease-in;
+            }
+
+            .nav-links li {
+                opacity: 0;
+            }
+
+            .burger {
+                display: block;
+            }
+
+            .about-content, .chef-content, .location-content {
+                flex-direction: column;
+            }
+
+            .about-content img, .chef-content img {
+                max-width: 100%;
+            }
+
+            .featured-dishes, .event-list, .testimonial-container {
+                flex-direction: column;
+            }
+
+            .dish, .event, .testimonial {
+                flex-basis: 100%;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+
+            .footer-section {
+                flex-basis: 100%;
+            }
+        }
+
+        .nav-active {
+            transform: translateX(0%);
+        }
+
+        @keyframes navLinkFade {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+
+        .toggle .line1 {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .toggle .line2 {
+            opacity: 0;
+        }
+
+        .toggle .line3 {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Delicious Bites</div>
+            <ul class="nav-links">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#about">Sobre Nosotros</a></li>
+                <li><a href="#menu">Menú</a></li>
+                <li><a href="#chef">Nuestro Chef</a></li>
+                <li><a href="#events">Eventos</a></li>
+                <li><a href="#gallery">Galería</a></li>
+                <li><a href="#location">Ubicación</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <h1>Bienvenidos a Delicious Bites</h1>
+            <p>Experiencia culinaria excepcional en cada bocado</p>
+        </section>
+
+        <section id="about" class="about">
+            <h2>Sobre Nosotros</h2>
+            <div class="about-content">
+                <img src="/placeholder.svg?height=400&width=600" alt="Interior del restaurante Delicious Bites">
+                <div class="about-text">
+                    <p>En Delicious Bites, nos apasiona ofrecer una experiencia gastronómica única. Nuestro restaurante combina sabores innovadores con técnicas culinarias tradicionales para crear platos que deleitan todos los sentidos.</p>
+                    <p>Fundado en [Año], nos hemos convertido en un referente de la alta cocina en [Tu Ciudad], ofreciendo un menú que cambia con las estaciones para aprovechar los ingredientes más frescos y de mejor calidad.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured" class="featured">
+            <h2>Platos Destacados</h2>
+            <div class="featured-dishes">
+                <div class="dish">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Salmón a la parrilla">
+                    <h3>Salmón a la parrilla</h3>
+                    <p>Salmón fresco del Atlántico con salsa de mantequilla al limón</p>
+                </div>
+                <div class="dish">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Filete de ternera">
+                    <h3>Filete de ternera</h3>
+                    <p>Corte premium de ternera con reducción de vino tinto</p>
+                </div>
+                <div class="dish">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Pasta vegetariana">
+                    <h3>Pasta vegetariana</h3>
+                    <p>Pasta artesanal con verduras de temporada</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="menu" class="menu">
+            <h2>Nuestro Menú</h2>
+            <p>Escanea el código QR para ver nuestro menú completo</p>
+            <img src="/placeholder.svg?height=200&width=200" alt="Código QR del menú" class="qr-code">
+        </section>
+
+        <section id="chef" class="chef">
+            <h2>Nuestro Chef</h2>
+            <div class="chef-content">
+                <img src="/placeholder.svg?height=400&width=300" alt="Chef Ejecutivo de Delicious Bites">
+                <div class="chef-bio">
+                    <h3>Chef [Nombre del Chef]</h3>
+                    <p>Con más de 20 años de experiencia en cocinas de renombre mundial, nuestro chef ejecutivo [Nombre] trae su pasión y creatividad a cada plato en Delicious Bites. Formado en [Escuela de Cocina], ha trabajado en restaurantes con estrellas Michelin en [Ciudades/Países], perfeccionando su arte culinario.</p>
+                    <p>Su filosofía se centra en resaltar los sabores naturales de los ingredientes locales de alta calidad, creando platos que son tanto una obra de arte visual como una explosión de sabores.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="events" class="events">
+            <h2>Eventos Especiales</h2>
+            <div class="event-list">
+                <div class="event">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Cena de degustación">
+                    <h3>Cena de degustación mensual</h3>
+                    <p>Únete a nosotros cada primer viernes del mes para una experiencia culinaria única de 7 platos.</p>
+                </div>
+                <div class="event">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Clases de cocina">
+                    <h3>Clases de cocina con el chef</h3>
+                    <p>Aprende los secretos de nuestra cocina en nuestras clases mensuales impartidas por nuestro chef ejecutivo.</p>
+                </div>
+                <div class="event">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Cenas temáticas">
+                    <h3>Cenas temáticas estacionales</h3>
+                    <p>Celebra cada estación con nuestros menús temáticos que resaltan los mejores ingredientes de temporada.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="gallery">
+            <h2>Galería</h2>
+            <div class="gallery-grid">
+                <img src="/placeholder.svg?height=200&width=200" alt="Plato 1">
+                <img src="/placeholder.svg?height=200&width=200" alt="Plato 2">
+                <img src="/placeholder.svg?height=200&width=200" alt="Plato 3">
+                <img src="/placeholder.svg?height=200&width=200" alt="Plato 4">
+                <img src="/placeholder.svg?height=200&width=200" alt="Plato 5">
+                <img src="/placeholder.svg?height=200&width=200" alt="Plato 6">
+                <img src="/placeholder.svg?height=200&width=200" alt="Interior del restaurante 1">
+                <img src="/placeholder.svg?height=200&width=200" alt="Interior del restaurante 2">
+            </div>
+        </section>
+
+        <section id="testimonials" class="testimonials">
+            <h2>Lo que dicen nuestros clientes</h2>
+            <div class="testimonial-container">
+                <div class="testimonial">
+                    <p>"La mejor experiencia gastronómica que he tenido en años. Los sabores eran increíbles!"</p>
+                    <p class="author">- Sara J.</p>
+                </div>
+                <div class="testimonial">
+                    <p>"Servicio impecable y ambiente acogedor. Definitivamente volveré!"</p>
+                    <p class="author">- Miguel R.</p>
+                </div>
+                <div class="testimonial">
+                    <p>"El plato especial del chef estaba fuera de este mundo. Imprescindible para los amantes de la comida!"</p>
+                    <p class="author">- Elena T.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="location" class="location">
+            <h2>Nuestra Ubicación</h2>
+            <div class="location-content">
+                <div class="map">
+                    <img src="/placeholder.svg?height=400&width=600" alt="Mapa de ubicación de Delicious Bites">
+                </div>
+                <div class="address">
+                    <h3>Encuéntranos en:</h3>
+                    <p>Calle Principal, 123</p>
+                    <p>[Tu Ciudad], [Código Postal]</p>
+                    <p>Tel: (123) 456-7890</p>
+                    <h3>Horario:</h3>
+                    <p>Lunes a Jueves: 12:00 - 22:00</p>
+                    <p>Viernes y Sábado: 12:00 - 23:00</p>
+                    <p>Domingo: 12:00 - 21:00</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contacto</h2>
+            <form class="contact-form">
+                <input type="text" name="name" placeholder="Nombre" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="tel" name="phone" placeholder="Teléfono">
+                <textarea name="message" placeholder="Mensaje" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Delicious Bites</h3>
+                <p>Experiencia culinaria excepcional en el corazón de [Tu Ciudad].</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces rápidos</h3>
+                <ul>
+                    <li><a href="#home">Inicio</a></li>
+                    <li><a href="#menu">Menú</a></li>
+                    <li><a href="#events">Eventos</a></li>
+                    <li><a href="#contact">Reservas</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-icons">
+                    <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Delicious Bites Restaurant. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/1234567890" class="whatsapp-button" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        const navSlide = () => {
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+        const navLinks = document.querySelectorAll('.nav-links li');
+
+        burger.addEventListener('click', () => {
+            // Toggle Nav
+            nav.classList.toggle('nav-active');
+
+            // Animate Links
+            navLinks.forEach((link, index) => {
+                if (link.style.animation) {
+                    link.style.animation = '';
+                } else {
+                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+                }
+            });
+
+            // Burger Animation
+            burger.classList.toggle('toggle');
+        });
+    }
+
+    const smoothScroll = () => {
+        const links = document.querySelectorAll('a[href^="#"]');
+        
+        for (const link of links) {
+            link.addEventListener('click', clickHandler);
+        }
+        
+        function clickHandler(e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            const offsetTop = document.querySelector(href).offsetTop - 80;
+            
+            scroll({
+                top: offsetTop,
+                behavior: "smooth"
+            });
+        }
+    }
+
+    navSlide();
+    smoothScroll();
+
+
+    </script>
+</body>
+</html>

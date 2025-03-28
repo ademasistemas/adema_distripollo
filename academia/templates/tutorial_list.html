@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Tutoriales paso a paso desde cero del sistema ADEMA" />
+    <meta name="author" content="Kevin Turkienich" />
+    <title>ADEMA Tutoriales</title>
+
+    <link rel="stylesheet" href="{% static 'academia/styles.css' %}">
+
+</head>
+<body>
+    
+    <header style="background-color: #212529; color: white;">
+        <nav id="main-nav">
+            <b>ADEMA Tutoriales</b>
+
+            <div>
+                <input type="text" id="search-bar" placeholder="Buscar tutoriales...">
+                <a href="/" class="btn btn-danger" style="margin-left: 10px;">
+                    <i style="color: aliceblue;text-decoration: none;" class="fas fa-arrow-left">Volver</i> 
+                </a>
+            </div>
+            
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside class="timeline">
+            <ul>
+                {% for category in categories %}
+                <li><a href="#{{ category.slug }}" class="{% if forloop.first %}active{% endif %}">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <main>
+            {% for category in categories %}
+            <section class="tutorial-section" id="{{ category.slug }}">
+                <h2>{{ category.name }}</h2>
+                {% for tutorial in category.tutorials.all %}
+                <div class="subsection">
+                    <div class="subsection-content">
+                        <h3>{{ tutorial.title }}</h3>
+                        <p>{{ tutorial.description }}</p>
+                    </div>
+                    <div class="video-container">
+                        <iframe src="{{ tutorial.video_url }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+            {% endfor %}
+        </main>
+    </div>
+
+    <script src="{% static 'academia/script.js' %}"></script>
+</body>
+</html>

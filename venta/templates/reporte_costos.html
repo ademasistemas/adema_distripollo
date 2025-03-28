@@ -1,0 +1,325 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div class="container" style="min-height: 90vh;">
+    <div class="text-start">
+        <h1 class="text-light p-3" style="margin-top: 70px;"><b></b></h1>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0"><i class="fas fa-chart-pie"></i> Reporte General de Ganancias</h3>
+        </div>
+        
+        <div class="card-body">
+            <!-- Filtros -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <form method="GET" action="" class="mb-0">
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <label for="month_year" class="form-label"><b>Seleccionar Período</b></label>
+                                <input type="month" id="month_year" name="month_year" class="form-control" value="{{ year }}-{{ month|default_if_none:01 }}">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-8 d-flex align-items-end">
+                                <button type="submit" class="btn btn-dark w-100 w-sm-auto">Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tarjetas de resumen -->
+            <div class="row g-3 mb-4">
+                <!-- Total Vendido -->
+                <div class="col-6 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-dark text-white py-2">
+                            <h5 class="mb-0 fs-6 text-center">TOTAL VENDIDO</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <!-- Versión móvil y desktop unificada -->
+                            <div class="p-3">
+                                <div class="text-danger text-center mb-2" style="font-size: 1.5rem;">
+                                    {{ configuracion.moneda }} {{ ventas_mensual|floatformat:2|intcomma }}
+                                </div>
+                                <div class="text-center small d-block d-md-none">
+                                    <span class="text-muted">Ventas del período</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Costos de Mercadería -->
+                <div class="col-6 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-dark text-white py-2">
+                            <h5 class="mb-0 fs-6 text-center">COSTOS MERCADERÍA</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="p-3">
+                                <div class="text-danger text-center mb-2" style="font-size: 1.5rem;">
+                                    {{ configuracion.moneda }} {{ costos_mensual|floatformat:2|intcomma }}
+                                </div>
+                                <div class="text-center small d-block d-md-none">
+                                    <span class="text-muted">Costo de ventas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Total Gastos -->
+                <div class="col-6 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-dark text-white py-2">
+                            <h5 class="mb-0 fs-6 text-center">TOTAL GASTOS</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="p-3">
+                                <div class="text-danger text-center mb-2" style="font-size: 1.5rem;">
+                                    {{ configuracion.moneda }} {{ gastos_mensual|floatformat:2|intcomma }}
+                                </div>
+                                <div class="text-center small d-block d-md-none">
+                                    <span class="text-muted">Gastos operativos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ganancias Estimadas -->
+                <div class="col-6 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-dark text-white py-2">
+                            <h5 class="mb-0 fs-6 text-center">GANANCIAS</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="p-3">
+                                <div class="text-danger text-center mb-2" style="font-size: 1.5rem;">
+                                    {{ configuracion.moneda }} {{ rentablilidad|floatformat:2|intcomma }}
+                                </div>
+                                <div class="text-center small d-block d-md-none">
+                                    <span class="text-muted">Utilidad neta</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gráfico de evolución -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white py-3">
+                            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Evolución semestral</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="linechart" style="min-height: 350px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección adicional: Desglose de gastos (opcional) -->
+            <div class="row g-4">
+                <div class="col-12 col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-dark text-white py-3">
+                            <h5 class="mb-0"><i class="fas fa-percentage me-2"></i>Distribución de costos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body">
+                                            <h6 class="text-muted mb-2">Margen bruto</h6>
+                                            <h4 class="mb-0">{{ margen_bruto|default:"0"|floatformat:2 }}%</h4>
+                                            <small class="text-muted">(Ventas - Costo de ventas) / Ventas</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-3">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body">
+                                            <h6 class="text-muted mb-2">Margen neto</h6>
+                                            <h4 class="mb-0">{{ margen_neto|default:"0"|floatformat:2 }}%</h4>
+                                            <small class="text-muted">(Ganancias / Ventas)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 25px;">
+                                {% with costos_porcentaje=costos_mensual|default:0|floatformat:0|stringformat:"s" %}
+                                {% with gastos_porcentaje=gastos_mensual|default:0|floatformat:0|stringformat:"s" %}
+                                {% with ganancias_porcentaje=rentablilidad|default:0|floatformat:0|stringformat:"s" %}
+                                
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ costos_porcentaje }}%;" 
+                                    aria-valuenow="{{ costos_porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+                                    Costos
+                                </div>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ gastos_porcentaje }}%;" 
+                                    aria-valuenow="{{ gastos_porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+                                    Gastos
+                                </div>
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ ganancias_porcentaje }}%;" 
+                                    aria-valuenow="{{ ganancias_porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+                                    Ganancias
+                                </div>
+                                
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-dark text-white py-3">
+                            <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Comparativa mensual</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Mes</th>
+                                            <th>Ventas</th>
+                                            <th>Costos</th>
+                                            <th>Ganancias</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Si tienes datos de comparativa mensual, puedes mostrarlos aquí -->
+                                        <tr>
+                                            <td>{{ month_name|default:"Este mes" }}</td>
+                                            <td>{{ configuracion.moneda }} {{ ventas_mensual|floatformat:2|intcomma }}</td>
+                                            <td>{{ configuracion.moneda }} {{ costos_mensual|floatformat:2|intcomma }}</td>
+                                            <td>{{ configuracion.moneda }} {{ rentablilidad|floatformat:2|intcomma }}</td>
+                                        </tr>
+                                        <!-- Puedes agregar más filas con datos de meses anteriores si los tienes -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Highcharts.chart('linechart', {
+        chart: {
+            type: 'column',
+            style: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            }
+        },
+        title: {
+            text: '',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [{% for dia in dias_semestral %} '{{ dia }}', {% endfor %}],
+            labels: {
+                style: {
+                    fontSize: '12px'
+                },
+                rotation: -45,
+                align: 'right'
+            }
+        },
+        yAxis: {
+            allowDecimals: false,
+            min: 0,
+            title: {
+                text: 'Monto ({{ configuracion.moneda }})',
+                style: {
+                    fontSize: '14px'
+                }
+            },
+            labels: {
+                formatter: function() {
+                    return '{{ configuracion.moneda }} ' + Highcharts.numberFormat(this.value, 0, ',', '.');
+                },
+                style: {
+                    fontSize: '12px'
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{point.key}</span><br>',
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{{ configuracion.moneda }} {point.y:,.2f}</b><br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                borderRadius: 3,
+                borderWidth: 0
+            }
+        },
+        legend: {
+            enabled: true,
+            itemStyle: {
+                fontSize: '13px'
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    xAxis: {
+                        labels: {
+                            rotation: -90,
+                            style: {
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    legend: {
+                        itemStyle: {
+                            fontSize: '11px'
+                        }
+                    }
+                }
+            }]
+        },
+        series: [
+            {
+                name: 'Ganancias',
+                data: [{% for venta in ventas_diario %} {{ venta|floatformat:2 }}, {% endfor %}],
+                color: '#20c997'
+            }, 
+            {
+                name: 'Costos',
+                data: [{% for costo in costos_semestral %} {{ costo|floatformat:2 }}, {% endfor %}],
+                color: '#dc3545'
+            },
+            {
+                name: 'Gastos',
+                data: [{% for gasto in gastos_semestral %} {{ gasto|floatformat:2 }}, {% endfor %}],
+                color: '#fd7e14'
+            }
+        ]
+    });
+</script>
+{% endblock %}

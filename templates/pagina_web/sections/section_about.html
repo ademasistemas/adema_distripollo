@@ -1,0 +1,14 @@
+<section id="sobre-nosotros" class="about" 
+    style="background: {{ landing.get_about_background }}; color: {{ landing.about_font_color }};">
+    <div class="container">
+        <div class="about-content">
+            {% if landing.about_logo %}
+                <img src="{{ landing.about_logo.url }}" alt="Logo de la empresa" class="about-logo">
+            {% endif %}
+            <h2>{{ landing.about_title }}</h2>
+            <br>
+            <p>{{ landing.about_text1 }}</p>
+            <p>{{ landing.about_text2 }}</p>
+        </div>
+    </div>
+</section>

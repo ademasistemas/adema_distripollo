@@ -1,0 +1,47 @@
+<section id="especialidades" class="specialties" style="background: {{ landing.especialidades_bg_color }}; color: {{ landing.especialidades_font_color }};">
+    <div class="container">
+        <h2>{{ landing.especialidades_title }}</h2>
+        <div class="specialty-cards">
+            <!-- Card 1 -->
+            <div class="card">
+                {% if landing.especialidades_dish1_image %}
+                    <img src="{{ landing.especialidades_dish1_image.url }}" alt="{{ landing.especialidades_dish1_title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=Especialidad+1" alt="Placeholder">
+                {% endif %}
+                <h3>{{ landing.especialidades_dish1_title }}</h3>
+                <p>{{ landing.especialidades_dish1_description }}</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="card">
+                {% if landing.especialidades_dish2_image %}
+                    <img src="{{ landing.especialidades_dish2_image.url }}" alt="{{ landing.especialidades_dish2_title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=Especialidad+2" alt="Placeholder">
+                {% endif %}
+                <h3>{{ landing.especialidades_dish2_title }}</h3>
+                <p>{{ landing.especialidades_dish2_description }}</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="card">
+                {% if landing.especialidades_dish3_image %}
+                    <img src="{{ landing.especialidades_dish3_image.url }}" alt="{{ landing.especialidades_dish3_title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=Especialidad+3" alt="Placeholder">
+                {% endif %}
+                <h3>{{ landing.especialidades_dish3_title }}</h3>
+                <p>{{ landing.especialidades_dish3_description }}</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="card">
+                {% if landing.especialidades_dish4_image %}
+                    <img src="{{ landing.especialidades_dish4_image.url }}" alt="{{ landing.especialidades_dish4_title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=Especialidad+4" alt="Placeholder">
+                {% endif %}
+                <h3>{{ landing.especialidades_dish4_title }}</h3>
+                <p>{{ landing.especialidades_dish4_description }}</p>
+            </div>
+        </div>
+    </div>
+</section>

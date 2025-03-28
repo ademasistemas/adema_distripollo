@@ -1,0 +1,188 @@
+{% extends 'core/base.html' %}
+{% load humanize %}
+{% block styles %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'producto/css/style.css' %}">
+
+{% endblock %}
+
+{% block content %}
+    <style>
+            /* Estilo para el texto emergente */
+        .hover-text {
+            display: none;
+            position: absolute;
+            background-color: #ff7979;
+            padding: 5px;
+            border: 1px solid #000000;
+            border-radius: 3px;
+
+            margin-left: 10px; /* Ajusta la posición horizontal según tus necesidades */
+            z-index: 1; /* Asegura que el texto esté por encima de otros elementos */
+        }
+
+        /* Mostrar el texto emergente en el hover */
+        .btn:hover .hover-text {
+            display: inline-block;
+        }
+
+        .fixed-size-card {
+            /* Establece un tamaño fijo para la tarjeta y su contenido */
+            width: 100%; /* Puedes ajustar esto según tus necesidades */
+            height: 100%; /* Puedes ajustar esto según tus necesidades */
+        }
+
+        .fixed-size-card .card-body {
+            /* Asegúrate de que el cuerpo de la tarjeta ocupe el espacio disponible */
+            height: 100%; /* Puedes ajustar esto según tus necesidades */
+        }
+
+    </style>
+
+    
+    <div class="container">
+        <div class="" style="text-align: start;">
+            <h1 class="text-light p-3" style="margin-top: 90px;"><b></b></h1>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <form class="form-inline" action="" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input name="search" class="form-control" type="text" placeholder="Buscar productos..." aria-label="Search">
+                        <button name="btnsearch" class="btn btn-success" type="submit">BUSCAR</button>
+                    </div>
+                </form>
+                <div class="d-flex justify-content-center mt-2 mt-md-0">
+                    <h5 class="text-light mx-2">Página {{ producto_list.number }} de {{ producto_list.paginator.num_pages }}.</h5>
+                </div>
+                <div class="d-flex justify-content-center mt-2 mt-md-0">
+                    {% if producto_list.has_previous %}
+                        <a href="?page=1" class="btn btn-success me-2">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        <a href="?page={{ producto_list.previous_page_number }}" class="btn btn-success me-2">
+                            <i class="fas fa-angle-left"></i> Anterior
+                        </a>
+                    {% endif %}
+                    {% if producto_list.has_next %}
+                        <a href="?page={{ producto_list.next_page_number }}" class="btn btn-success me-2">
+                            Siguiente <i class="fas fa-angle-right"></i>
+                        </a>
+                        <a href="?page={{ producto_list.paginator.num_pages }}" class="btn btn-success">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="row text-white">
+            {% if data.status %}
+                {% if data.status == 'False' %}
+                    <p class="text-danger">No se pudo añadir el producto</p>
+                    Razón: <p class="text-danger" style="font-size: large; display: inline-block;"> Para ingresar artículos al carrito debe crear una nueva venta.</p>
+                    {% else %}
+                    {% if data.status == 'Sin resultados' %}
+                        <p class="text-danger">Sin resultados</p>
+                    {% else %}
+                        <p class="text-white">{{ data.status }}</p>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+            {% if data.error %}
+                <p class="text-danger">
+                    {{ data.error }}
+                </p>
+            {% endif %}
+        </div>
+        
+        <div class="row card" style="margin: 10px;padding-left: 15px;">
+            <div class="row col-12">
+                <!-- # HAY DOS VISTAS -->
+                {% if configuracion.vista_clasica == True %}
+
+                    {% include 'venta/producto_list_clasica.html' %}
+            
+                {% else %}
+
+                    {% include 'venta/producto_list_tabla.html' %}
+                
+                {% endif %}
+                    
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    function ordenarProductos() {
+        let orden = document.getElementById("ordenar").value;
+        let url = new URL(window.location.href);
+        url.searchParams.set("ordenar", orden);
+        window.location.href = url.href;
+    }   
+    function actualizarContenidoSubtotal() {
+        var total = selectedOption.getAttribute('data-total');
+        var cantidad = document.getElementById('cantidad').value;
+        var elementoSubtotalModal = document.getElementById('.precio-subtotal-modal');
+        
+        elementoSubtotalModal.innerHTML = (total && cantidad) ? '$ ' + (parseFloat(total.replace(',', '.')) * parseFloat(cantidad)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') : '';
+    }
+
+
+
+    const driver = window.driver.js.driver;
+
+    const driverObj = driver({
+    showProgress: true,
+    steps: [
+        { element: '#tour_paso1', popover: { title: 'Vamos a crear una venta!', description: 'Para crear una venta, simplemente seleccionamos el boton rojo que dice "Agregar" (si el stock del producto es 0 o negativo, este boton se representa en amarillo)', side: "left", align: 'start' }},
+        { element: 'code .line:nth-child(1)', popover: { title: 'Veamos nuestro carrito de ventas.', description: 'Para cerrar la venta, debemos ir al carrito en la seccion superior del menu', side: "top", align: 'start' }},
+        { element: 'code .line:nth-child(2)', popover: { title: 'Importing CSS', description: 'Import the CSS which gives you the default styling for popover and overlay.', side: "bottom", align: 'start' }},
+        { element: 'code .line:nth-child(4) span:nth-child(7)', popover: { title: 'Create Driver', description: 'Simply call the driver function to create a driver.js instance', side: "left", align: 'start' }},
+        { element: 'code .line:nth-child(18)', popover: { title: 'Start Tour', description: 'Call the drive method to start the tour and your tour will be started.', side: "top", align: 'start' }},
+        { element: 'a[href="/docs/configuration"]', popover: { title: 'More Configuration', description: 'Look at this page for all the configuration options you can pass.', side: "right", align: 'start' }},
+        { popover: { title: 'Happy Coding', description: 'And that is all, go ahead and start adding tours to your applications.' } }
+    ]
+    });
+
+    // Obtener referencias a los elementos del DOM
+    const baseInput = document.getElementById('base');
+    const alturaInput = document.getElementById('altura');
+    const cantidadInput = document.getElementById('cantidad');
+    const ventaCajaSelect = document.getElementById('venta_caja_select');
+    const subtotalElement = document.getElementById('precio-subtotal-modal');
+
+    // Función para calcular el subtotal
+    function calcularSubtotal() {
+      // Obtener los valores de los campos
+      const base = parseFloat(baseInput.value)/1000;
+      const altura = parseFloat(alturaInput.value)/1000;
+      const cantidad = parseFloat(cantidadInput.value);
+      const precioPorMetroCuadrado = parseFloat(ventaCajaSelect.options[ventaCajaSelect.selectedIndex].getAttribute('data-total'));
+
+      // Calcular el subtotal
+      const subtotal = base * altura * cantidad * precioPorMetroCuadrado;
+
+      // Actualizar el elemento en el DOM con el subtotal calculado
+      subtotalElement.textContent = `${subtotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    }
+
+    // Agregar eventos de cambio a los campos de entrada y al select
+    baseInput.addEventListener('change', calcularSubtotal);
+    alturaInput.addEventListener('change', calcularSubtotal);
+    cantidadInput.addEventListener('change', calcularSubtotal);
+    ventaCajaSelect.addEventListener('change', calcularSubtotal);
+
+    // Llamar a la función al cargar la página para tener el subtotal inicial
+    calcularSubtotal();
+</script>
+{% endblock %}

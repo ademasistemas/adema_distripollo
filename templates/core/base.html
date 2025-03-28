@@ -1,0 +1,329 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Proyecto de punto de venta - ADEMA" />
+        <meta name="author" content="Kevin Turkienich" />
+        <title>ADEMA</title>
+
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <style>
+        /* Contenedor del avatar del robot */
+
+        .chat-avatar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--bs-secondary); /* Fondo secondary */
+            border: 2px solid var(--bs-dark); /* Borde dark */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+
+
+        /* Mostrar tooltip cuando se hace hover en el avatar */
+        .chat-avatar:hover .chat-avatar-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* La cabeza del robot */
+        .robot-head {
+            width: 50px;
+            height: 50px;
+            background-color: #555; /* Gris metálico */
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Los ojos del robot */
+        .robot-eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 70%;
+        }
+
+        .eye {
+            width: 10px;
+            height: 10px;
+            background-color: #fff; /* Blanco para los ojos */
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .eye::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 6px;
+            height: 6px;
+            background-color: #333; /* Pupilas oscuras */
+            border-radius: 50%;
+        }
+
+        /* Boca del robot */
+        .robot-mouth {
+            width: 20px;
+            height: 5px;
+            background-color: #fff; /* Boca blanca */
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        /* Tooltip de ayuda */
+        .chat-avatar-tooltip {
+            position: absolute;
+            bottom: 80px;
+            right: 50px;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Animación de flotación */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px); /* Movimiento hacia arriba */
+            }
+        }
+
+        /* Estilos para la ventana de chat */
+        .chat-box {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        /* Cabecera del chat */
+        .chat-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Cuerpo del chat */
+        .chat-body {
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Pie del chat */
+        .chat-footer {
+            padding: 10px;
+            display: flex;
+            background-color: #f1f1f1;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .chat-footer button {
+            padding: 10px 15px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        </style>
+    </head>
+
+    <body id="page-top">
+
+        <nav class="navbar navbar-expand-lg bg-black text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="/">ADEMA</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-dark text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/">Tienda de productos</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/carrito/">Carrito</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administracion</a>
+                            <div class="dropdown-menu" aria-labelledby="productosDropdown">
+                                
+                                <a class="dropdown-item" href="/producto/gestionar">Listado de productos</a>
+                                <a class="dropdown-item" href="/ventasPorProducto/">Ventas por producto</a>
+                                <a class="dropdown-item" href="/ventas/">Ventas por trasnsaccion</a>
+                                <a class="dropdown-item" href="/reporte_ventas/">Reporte de Ventas</a>
+                                <a class="dropdown-item" href="/reporte_ganancias/">Reporte de Ganancias</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cuenta</a>
+                            <div class="dropdown-menu" aria-labelledby="productosDropdown">
+                                <a class="dropdown-item" href="/admin/">Panel</a>
+                                <a class="dropdown-item" href="/academia/">Tutoriales</a>
+                                <a class="dropdown-item" href="{% url 'custom_logout' %}">Cerrar sesión</a>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Masthead-->
+        <header class="bg-dark text-white text-center" style="min-height: 80vh;">
+            <div class="d-flex flex-column">
+                {% block content %}
+
+                {% endblock %}  
+            </div>
+        </header>
+
+                
+        <!-- Footer -->
+        <footer class="copyright py-4 text-center text-white bg-black">
+            <div class="container">
+                <small>Copyright &copy; EXCEL-ENTE 2025</small>
+            </div>
+        </footer>
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{% static 'js/scripts.js' %}"></script>
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script src="{% static 'producto/js/jquery.min.js' %}"></script>
+        <script src="{% static 'producto/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'producto/js/script.js' %}"></script>
+
+        <script>
+            function enviarPregunta() {
+                var pregunta = document.getElementById("chat-input").value;
+                if (pregunta.trim() === "") return;
+
+                // Añadir la pregunta al chat
+                var chatMessages = document.getElementById("chat-messages");
+                chatMessages.innerHTML += "<p><strong>Tu:</strong> " + pregunta + "</p>";
+
+                // Limpiar el input
+                document.getElementById("chat-input").value = "";
+
+                // Enviar la pregunta al servidor con AJAX
+                fetch('/chatbot/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': getCookie('csrftoken')  // CSRF token para seguridad
+                    },
+                    body: 'pregunta=' + encodeURIComponent(pregunta)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.respuesta) {
+                        chatMessages.innerHTML += "<p><strong>Babot:</strong> " + data.respuesta + "</p>";
+                    } else {
+                        chatMessages.innerHTML += "<p><strong>Babot:</strong> No entendí tu pregunta.</p>";
+                    }
+                    scrollChatToBottom();  // Desplazar el chat hacia el final
+                })
+                .catch(error => {
+                    chatMessages.innerHTML += "<p><strong>Babot:</strong> Error en la conexión.</p>";
+                    scrollChatToBottom();  // Desplazar el chat hacia el final
+                });
+            }
+
+            // Función para obtener el CSRF token de Django
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Enviar el mensaje con "Enter"
+            document.getElementById("chat-input").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();  // Prevenir que el "Enter" añada una nueva línea
+                    enviarPregunta();        // Llamar a la función para enviar la pregunta
+                }
+            });
+
+            // Función para mantener el scroll en la parte inferior del chat
+            function scrollChatToBottom() {
+                var chatMessages = document.getElementById("chat-messages");
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Función para alternar la visualización del chat
+            function toggleChat() {
+                var chatBox = document.getElementById("chat-box");
+                if (chatBox.style.display === "none" || chatBox.style.display === "") {
+                    chatBox.style.display = "flex";
+                    scrollChatToBottom();  // Asegurarse de que al abrir el chat, esté en la parte inferior
+                } else {
+                    chatBox.style.display = "none";
+                }
+            }
+        </script>
+            
+    </body>
+</html>

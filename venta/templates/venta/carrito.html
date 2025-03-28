@@ -1,0 +1,459 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+
+{% block extrastyles %}
+<style>
+    /* Ajustes para responsividad y estilo */
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    /* Estilos para dispositivos pequeños */
+    @media (max-width: 768px) {
+        .table th, .table td {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+        }
+        .btn-sm {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.5rem;
+        }
+    }
+
+    /* Estilos adicionales para una mejor visualización */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="" style="text-align: start;">
+        <h1 class="text-light p-3" style="margin-top: 70px;"><b></b></h1>
+    </div>
+    <div class="row" style="min-height: 80vh;">
+        <div class="card p-3" style="border: none;">
+
+            <div class="row p-3">
+                <!-- Colocar el texto a la derecha -->
+                <div class="col-6 card p-3" style="border: none;text-align: center;">
+                    <div class="row mt-3">   
+                        <div class="col-6">
+                            <h6 class="text-dark">Venta # {{ venta.codigo }}</h6>
+                        </div>
+                        <div class="col-6">
+                            <h5 class="text-success">Items : {{ venta.get_cart_items|floatformat:0|intcomma }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <h2 class="text-danger"><b class="text-dark">Total {{ configuracion.Moneda }}</b> {{ venta.get_cart_total|floatformat:0|intcomma }}</h2>
+                    </div>
+    
+                    <div class="row mt-3">
+                        <div class="row">
+                            <div class="col-2" style="padding-bottom: 10px;">
+                                           
+                                <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#modalClientes">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                               
+                            </div>
+                            <div class="col-2 pt-1">
+                                <b><p class="text-dark">Cliente:</p></b>
+                            </div>
+                            <div class="col-8 pt-1">
+                                {% if venta.cliente == None %}
+                                <h5 class="text-primary" style="text-align: left;">Consumidor Final</h5>
+                                {% else %}
+                                <h5 class="text-primary" style="text-align: left;">{{ venta.cliente }}</h5>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Modal de clientes -->
+                        <div class="modal fade" id="modalClientes" tabindex="-1" role="dialog" aria-labelledby="modalClientesLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-primary" id="modalClientesLabel">Seleccionar cliente</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            <h5>Seleccionar cliente:</h5>
+                                            {% csrf_token %}
+                                            <select name="id_cliente" class="form-control">
+                                                {% for cliente in lista_clientes %}
+                                                <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <br>
+                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+
+                </div>
+
+                <div class="col-6 text-center mx-auto">
+                    <div class="container mt-3 text-dark">
+
+                        <div class="row" style="margin: 15px;">
+                            <div class="col-6 text-center mx-auto">
+                                <a href="/" style="color: aliceblue; text-decoration: none;">
+                                    <button class="btn btn-success" style="width: 150px; height: 150px;">
+                                        <div>
+                                            <i class="fas fa-shopping-cart p-2" style="font-size: 40px;"></i>
+                                        </div>
+                                        <div>
+                                            <a href="/" style="color: aliceblue; text-decoration: none;">Agregar productos</a>
+                                        </div>
+                                        
+                                    </button>
+                                </a>
+                                
+                            </div>
+                            <div class="col-6 text-center mx-auto">
+                                {% if lista_detalle %}
+
+                                <button class="btn btn-danger" style="width: 150px; height: 150px;" type="button" data-toggle="modal" data-target="#modalPago">
+                                    <div>
+                                        <i class="fas fa-dollar-sign p-2" style="font-size: 40px;"></i>
+                                    </div>
+                                    <div>
+                                        <p>Cerrar carrito</p>
+                                    </div>
+                                </button>
+        
+                                <!-- Modal de cobro -->
+                                <div class="modal fade" id="modalPago" tabindex="-1" role="dialog" aria-labelledby="modalPago" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-primary" id="modalModificarLabel{{ detalle.id }}">Cerrar carrito </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group" style="text-align: left;">
+                                                    <p><b>DETALLES DE CLIENTE:</b></p>
+                                                    {% if venta.cliente %}
+                                                    <b class="text-primary">Cliente: &nbsp; </b>&nbsp; {{ venta.cliente }}
+                                                    <br>
+                                                    <b class="text-primary">Direccion: &nbsp; </b>&nbsp; {{ venta.cliente.direccion }}
+                                                    <br>
+                                                    <b class="text-primary">Telefono: &nbsp; </b>&nbsp; {{ venta.cliente.telefono }}
+                                                    {% else %}
+                                                    <b class="text-primary">Cliente:&nbsp; </b> &nbsp; Consumidor Final
+                                                    <br>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                {% if configuracion.entrega_ventas %}
+                                                <hr>
+                                                <div class="form-group" style="text-align: left;">
+                                                    {% if venta_por_kl %}
+                                                    <p><b>COSTO DE ENVIO:</b> (valor por km ${{ precio_km.total }} x km)</p>
+                                            
+                                                    <div class="row mt-3">
+                                                        <div class="col-6">
+                                                            {% if venta.total_entrega > 0 %}
+                                                                <div class=" pt-1">
+                                                                    <label class="text-primary"  for="cantidadKl">Cambiar cantidad de Kms:</label> 
+                                                                </div>
+                                                            {% else %}
+                                                                <div class=" pt-1">
+                                                                    <label class="text-primary"  for="cantidadKl">Cantidad de Kms:</label> 
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input required name="cantidadKl" id="cantidadKl" type="number" class="form-control mb-3" step=".1" min="0" value="0">
+                                                        </div>
+
+                                                    </div>
+                                                    
+                                                    {% endif %}
+                                                </div>
+                                                {% endif %}
+                                                <hr>
+                                                
+                                                <div class="form-group row">
+                                                    <div class="col-6">
+                                                        <br>
+                                                        <b class="text-primary">Total a pagar</b>
+                                                        <br>
+                                                        <b class="text-danger">$ {{ venta.get_cart_total|floatformat:2|intcomma }}</b>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <br>
+                                                        <b class="text-primary">Total pagos</b>
+                                                        <br>
+                                                        <b class="text-danger">$ <span id="total_venta"></span></b>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                
+                                                <div class="form-group flex">
+                                                    <form action="" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="id_venta" value="{{ venta.id }}">
+                                                    
+                                                        <div class="form-group row">
+                                                            <div class="col-6" style="text-align: left;">
+                                                                <select class="form-select form-control" name="medio_pago_1" id="medio_pago_1">
+                                                                    {% for medio in medio_pago %}
+                                                                        {% if medio.Nombre == 'Cuenta Corriente' and venta.cliente.habilitar_cc == True %}
+                                                                            <option value="{{ medio.id }}">{{ medio.Nombre }}</option>
+                                                                        {% elif medio.Nombre != 'Cuenta Corriente' %}
+                                                                            <option value="{{ medio.id }}">{{ medio.Nombre }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6" style="text-align: right;">
+                                                                <input required name="total_1" id="total_1" type="number" class="form-control" step="0.01" min="0" value="0">
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="form-group row">
+                                                            <div class="col-6" style="text-align: left;">
+                                                                <select class="form-select form-control" name="medio_pago_2" id="medio_pago_2">
+                                                                    {% for medio in medio_pago %}
+                                                                        {% if medio.Nombre == 'Cuenta Corriente' and venta.cliente.habilitar_cc == True %}
+                                                                            <option value="{{ medio.id }}">{{ medio.Nombre }}</option>
+                                                                        {% elif medio.Nombre != 'Cuenta Corriente' %}
+                                                                            <option value="{{ medio.id }}">{{ medio.Nombre }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6" style="text-align: right;">
+                                                                <input required name="total_2" id="total_2" type="number" class="form-control" step="0.01" min="0" value="0">
+                                                            </div>
+                                                        </div>
+
+                                                        <br>
+                                                        <!-- {% if venta.cliente.habilitar_cc  %}
+                                                        <input name="reservar" type="submit" class="btn btn-danger btn-lg float-start" value="Cobrar en Cta. Cte.">
+                                                        {% endif %} -->
+                                                        <input name="pagar" type="submit" class="btn btn-success btn-lg float-end" value="Cobrar Carrito" id="btn-cerrar-carrito" onsubmit="return validarTotales()">
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                             <!-- Añade esto para depurar -->
+                            {% if venta_ant.id %}
+                            <a class="btn btn-primary" style="margin: 15px;"
+                            href="{% url 'venta:imprimir_ticket' venta_ant.id %}">Imprimir</a>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                
+            {% if data.eliminado %}
+                <p class="text-success text-center">
+                    {{ data.eliminado }}
+                </p>
+            {% endif %} 
+  
+            
+                <div class="row justify-content-center">
+                    <div class="row card" style="border: none;">
+                        <table class="table">
+                            <thead class="bg-dark" style="color: aliceblue;">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Precio P/U</th>
+                                <th scope="col">Total</th>
+                                {% if venta.estado == venta.ESTADO_CREADA %}
+                                    <th class="text-center" scope="col"></th>
+                                    <th class="text-center" scope="col"></th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for detalle in lista_detalle %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+
+                                    {% if detalle.producto.fabricacion_propia %}
+                                        <td>{{ detalle.producto.fabricacion_propia.Nombre }}</td>
+                                    {% else %}
+                                        <td>{{ detalle.producto.nombre }} {{ detalle.producto.descripcion }}</td>
+                                    {% endif %}
+                                    {% if detalle.unidad_de_medida == 'Mt2s' %}
+                                        <td>
+                                            {{detalle.cantidad|floatformat:2|intcomma }}&nbsp;x&nbsp;{{detalle.base|floatformat:2|intcomma}}mm x&nbsp;{{detalle.altura|floatformat:2|intcomma}}mm
+                                            
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            {% if detalle.unidad_de_medida == 'Unidades' %}
+                                                {{detalle.cantidad|floatformat:2|intcomma }}&nbsp;x&nbsp;{{detalle.cantidad_producto|floatformat:2|intcomma}}
+                                            {% else %}
+                                                {{detalle.cantidad|floatformat:2|intcomma }}&nbsp;x&nbsp;{{detalle.cantidad_producto|floatformat:1|intcomma}}
+                                            {% endif %}
+
+                                            {{detalle.unidad_de_medida}}
+                                        </td>
+                                    {% endif %}
+
+
+                                    <td>{{ configuracion.Moneda }} {{ detalle.precio|floatformat:2|intcomma }}</td>
+                                    <td>{{ configuracion.Moneda }} {{ detalle.get_total|floatformat:2|intcomma }}</td>
+                                    {% if venta.estado == venta.ESTADO_CREADA %}
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalModificar{{ detalle.id }}" data-detalle-id="{{ detalle.id }}">
+                                                Editar
+                                            </button>
+                                            <!-- Modal de modificación -->
+                                            <div class="modal fade" id="modalModificar{{ detalle.id }}" tabindex="-1" role="dialog" aria-labelledby="modalModificarLabel{{ detalle.id }}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-primary" id="modalModificarLabel{{ detalle.id }}">Modificar item de carrito </h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        
+                                                                    {% if producto.imagen %}
+                                                                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid mb-3">
+                                                                    {% else %}
+                                                                        <img src="{% static 'producto/placeholder.png' %}" alt="Imagen no disponible" class="img-fluid mb-3">
+                                                                    {% endif %}
+                                                                    <hr>
+                                                                    <p><b class="text-danger text-uppercase">{{ detalle.producto.nombre }}</b></p>
+                                                                    <p><b class="text-danger text-uppercase">{{ detalle.producto.descripcion }}</b></p>
+                                                    
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <div class="form-group">
+                                                                            <p>Cantidad Actual:</p>
+                                                                            <b class="text-danger">{{ detalle.cantidad }}</b>
+                                                                            <p>Precio Actual: </p>
+                                                                            <b class="text-danger">{{ detalle.moneda }} &nbsp; {{ detalle.precio|floatformat:2|intcomma }}</b>
+                                                                        </div>
+                                                                        <hr>
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" name="detalle_id" value="{{ detalle.id }}">
+                                                                        <div class="form-group">
+                                                                            <label for="nueva_cantidad">Nueva cantidad:</label>
+                                                                            <input type="number" name="nueva_cantidad" class="form-control" value="{{ detalle.cantidad|floatformat:0 }}">
+                                                                        </div>
+                                                                        <div class="form-group text-center">
+                                                                            <label for="nuevo_precio">Nuevo precio:</label>
+                                                                            <input type="number" name="nuevo_precio" class="form-control" value="{{ detalle.precio }}">
+                                                                        </div>
+                                                                        <br>
+                                                                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td class="text-center">
+                                            <form id="detalle{{ detalle.id }}" action="" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="detalle_id_delete" id="detalle_id_delete" value="{{ detalle.id }}">
+                                                <button name="btnquitardecarrito{{ detalle.id }}" type="submit"
+                                                        class="btn btn-danger btn-sm">
+                                                        Eliminar
+                                                </button>
+                                            </form>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <div>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id_venta" value="{{ venta.id }}">
+                            {% if venta.estado == venta.ESTADO_PAGADA %}
+                                <input name="finalizar" type="submit" class="btn btn-success btn-lg" value="Nueva venta"> |
+                                <a class="btn btn-primary" style="margin: 15px;"
+                                            href="{% url 'venta:imprimir_ticket' venta.id %}">Imprimir</a>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        // When the modal is hidden, submit the form with the selected client
+        $('#modalClientes').on('hidden.bs.modal', function () {
+            $('#cliente-form').submit(); // Submit the form
+        });
+    });
+</script>
+
+<script>
+    // Función para actualizar dinámicamente el total de pagos
+    function actualizarTotalPagos() {
+        var total_1 = parseFloat(document.getElementById('total_1').value);
+        var total_2 = parseFloat(document.getElementById('total_2').value);
+        var total_pagos = total_1 + total_2;
+
+        // Actualiza el contenido del span
+        document.getElementById('total_venta').innerText = total_pagos.toFixed(2);
+    }
+
+    // Asigna la función a los eventos "input" de los campos de totales
+    document.getElementById('total_1').addEventListener('input', actualizarTotalPagos);
+    document.getElementById('total_2').addEventListener('input', actualizarTotalPagos);
+</script>
+
+{% endblock %}

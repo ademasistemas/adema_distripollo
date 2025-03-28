@@ -1,0 +1,37 @@
+<section id="testimonios" class="testimonials" style="background: {{ landing.testimonials_bg_color }}; color: {{ landing.testimonials_font_color }};">
+    <div class="container">
+        <h2>{{ landing.testimonials_title }}</h2>
+        <div class="testimonial-carousel">
+            <!-- Testimonio 1 -->
+            <div class="testimonial">
+                {% if landing.testimonial1_logo %}
+                    <div class="testimonial-logo">
+                        <img src="{{ landing.testimonial1_logo.url }}" alt="Logo de {{ landing.testimonial1_author }}">
+                    </div>
+                {% endif %}
+                <p>"{{ landing.testimonial1 }}"</p>
+                <span class="author">{{ landing.testimonial1_author }}</span>
+            </div>
+            <!-- Testimonio 2 -->
+            <div class="testimonial">
+                {% if landing.testimonial2_logo %}
+                    <div class="testimonial-logo">
+                        <img src="{{ landing.testimonial2_logo.url }}" alt="Logo de {{ landing.testimonial2_author }}">
+                    </div>
+                {% endif %}
+                <p>"{{ landing.testimonial2 }}"</p>
+                <span class="author">{{ landing.testimonial2_author }}</span>
+            </div>
+            <!-- Testimonio 3 -->
+            <div class="testimonial">
+                {% if landing.testimonial3_logo %}
+                    <div class="testimonial-logo">
+                        <img src="{{ landing.testimonial3_logo.url }}" alt="Logo de {{ landing.testimonial3_author }}">
+                    </div>
+                {% endif %}
+                <p>"{{ landing.testimonial3 }}"</p>
+                <span class="author">{{ landing.testimonial3_author }}</span>
+            </div>
+        </div>
+    </div>
+</section>

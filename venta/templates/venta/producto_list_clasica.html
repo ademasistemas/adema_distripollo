@@ -1,0 +1,131 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <a href="{% url 'producto:descargar_productos_gestionar' %}" class="btn btn-success">
+                <i class="fas fa-file-excel"></i> Descargar Excel
+            </a>
+        </div>
+        
+        
+    
+        <!-- Ordenamiento -->
+        <div>
+            <label for="ordenar" class="text-light me-2">Ordenar por:</label>
+            <select id="ordenar" class="form-select" onchange="ordenarProductos()">
+                <option value="nombre" {% if request.GET.ordenar == "nombre" %}selected{% endif %}>Nombre</option>
+                <option value="codigo" {% if request.GET.ordenar == "codigo" %}selected{% endif %}>Código</option>
+                <option value="categoria" {% if orden_actual == "categoria" %}selected{% endif %}>Categoría</option>
+
+            </select>
+        </div>
+    </div>
+
+    <div id="tour_paso1" class="row ">
+        {% for producto in producto_list %}
+        <div class="col-6 col-md-4 col-lg-3 py-2"> <!-- Ajuste para 2 columnas en móviles -->
+            <div class="card shadow-sm h-100 text-dark">
+                <!-- Encabezado de la tarjeta -->
+                <div class="card-header bg-dark text-light d-flex justify-content-between align-items-center">
+                    <div>
+                        <b class="text-danger text-sm fst-italic">Categoría:</b>
+                        <br>
+                        <b>{{ producto.categoria|default:'Sin categoría' }}</b>
+                    </div>
+                    <div>
+                        {% if producto.stock_actual <= 0 %}
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#addToCart{{ producto.id }}">
+                                <i class="fas fa-exclamation-triangle"></i> Sin stock
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#addToCart{{ producto.id }}">
+                                <i class="fas fa-cart-plus"></i> Agregar
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Imagen del producto -->
+                <div class="card-body text-center">
+                    {% if configuracion.mostrar_foto %}
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid mb-3" style="max-height: 150px;">
+                        {% else %}
+                            <img src="{% static 'producto/placeholder.png' %}" alt="Sin imagen" class="img-fluid mb-3" style="max-height: 150px;">
+                        {% endif %}
+                    {% endif %}
+                    <h5 class="card-title text-dark">{{ producto.nombre }}</h5>
+                    <p class="text-muted">{{ producto.descripcion|default:"Sin descripción" }}</p>
+                    <div class="text-danger">
+                        {% for precio in producto.productos_precio %}
+                            <p class="mb-1">
+                                {{ configuracion.Moneda }} {{ precio.precio|floatformat:2|intcomma }}
+                                <span class="text-muted">x {{ precio.cantidad }} {{ precio.unidad_de_medida }}</span>
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Pie de la tarjeta -->
+                <div class="card-footer bg-dark text-light text-center">
+                    <small>En stock:</small>
+                    <b>{{ producto.stock_actual_str }}</b>
+                </div>
+            </div>
+
+            <!-- Modal para agregar al carrito -->
+            <div class="modal fade" id="addToCart{{ producto.id }}" tabindex="-1" aria-labelledby="modalLabel{{ producto.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-header bg-dark text-white">
+                                <h5 class="modal-title" id="modalLabel{{ producto.id }}">Añadir al carrito</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                        {% if producto.imagen %}
+                                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid mb-3">
+                                        {% else %}
+                                            <img src="{% static 'producto/placeholder.png' %}" alt="Imagen no disponible" class="img-fluid mb-3">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="hidden" name="id_producto" value="{{ producto.id }}">
+                                        <label for="cantidad{{ producto.id }}" class="form-label">Cantidad</label>
+                                        <input type="number" name="cantidad" id="cantidad{{ producto.id }}" class="form-control mb-3" value="1" min="1" max="{{ producto.stock_calculado }}" step="1" required>
+                                        
+                                        {% if producto.unidad_de_medida == "Mt2s" %}
+                                            <label for="base{{ producto.id }}" class="form-label">Base</label>
+                                            <input type="number" name="base" id="base{{ producto.id }}" class="form-control mb-3" value="1000" step="1" required>
+                                            <label for="altura{{ producto.id }}" class="form-label">Altura</label>
+                                            <input type="number" name="altura" id="altura{{ producto.id }}" class="form-control mb-3" value="1000" step="1" required>
+                                        {% endif %}
+
+                                        <label for="venta_caja{{ producto.id }}" class="form-label">Venta por</label>
+                                        <select name="venta_caja" id="venta_caja{{ producto.id }}" class="form-select mb-3">
+                                            {% for pre in producto.productos_precio %}
+                                                <option value="{{ pre.id }}">
+                                                    x {{ pre.cantidad }} {{ pre.unidad_de_medida }} | {{ configuracion.Moneda }} {{ pre.precio|floatformat:2|intcomma }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-dark w-100">Añadir al carrito</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ landing.title }}</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'pagina_web/styles.css' %}">
+
+</head>
+<body>
+    <div style="min-height: 75px;">
+
+    </div>
+    <header>
+        <div class="container">
+            <a href="/" class="logo">
+                <img src="{{ landing.logo.url }}" alt="{{ landing.title }}">
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><b><a href="/productos/">Productos</a></b></li>
+                    <li><b><a href="/app/">Ingresar</a></b></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        {% include 'pagina_web/sections/section_hero.html' %}
+
+        {% include 'pagina_web/sections/section_especialidades.html' %}
+
+        {% include 'pagina_web/sections/section_testimonials.html' %}
+ 
+        {% include 'pagina_web/sections/section_about.html' %}
+
+    </main>
+
+    {% include 'pagina_web/sections/footer.html' %}
+
+    <a href="https://wa.me/{{ landing.telefono }}" class="whatsapp-button" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a> 
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Menú hamburguesa
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('show');
+            });
+
+            // Cerrar menú al hacer clic en un enlace
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('show');
+                });
+            });
+
+            // Validación de formularios
+            const reservationForm = document.getElementById('reservation-form');
+            const contactForm = document.getElementById('contact-form');
+
+            function validateForm(form) {
+                let isValid = true;
+                form.querySelectorAll('input, textarea').forEach(field => {
+                    if (field.hasAttribute('required') && !field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('error');
+                    } else {
+                        field.classList.remove('error');
+                    }
+                });
+                return isValid;
+            }
+
+            reservationForm.addEventListener('submit', (e) => {
+                if (!validateForm(reservationForm)) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos requeridos.');
+                }
+            });
+
+            contactForm.addEventListener('submit', (e) => {
+                if (!validateForm(contactForm)) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos requeridos.');
+                }
+            });
+
+            // Carrusel de testimonios
+            const testimonials = document.querySelectorAll('.testimonial');
+            let currentTestimonial = 0;
+
+            function showTestimonial(index) {
+                testimonials.forEach((testimonial, i) => {
+                    testimonial.style.display = i === index ? 'block' : 'none';
+                });
+            }
+
+            function nextTestimonial() {
+                currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(currentTestimonial);
+            }
+
+            showTestimonial(currentTestimonial);
+            setInterval(nextTestimonial, 5000);
+
+            // Efecto parallax en la sección hero
+            const hero = document.querySelector('.hero');
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                hero.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
+            });
+        });
+
+    </script>
+</body>
+</html>

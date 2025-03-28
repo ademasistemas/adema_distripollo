@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+{% load humanize %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ticket de venta</title>
+    <style>
+        /* Estilos para eliminar decoración de la lista */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-decoration: none;
+        }
+        
+        /* Estilos para ajustar tamaño de fuente y espaciado */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0px;
+        }
+        
+        h1 {
+            font-size: 18px;
+            margin-bottom: 0px;
+        }
+        
+        h4 {
+            font-size: 10px;
+            margin: 0;
+        }
+        
+        hr {
+            border: 1px solid #000;
+            margin: 5px 0;
+        }
+        
+        ul li {
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+        
+        p, b {
+            font-size: 12px;
+        }
+
+    </style>
+</head>
+<body >
+    {% if venta.estado == 5 %}
+    <h1 style="color: red;">FACTURA ANULADA</h1>
+    {% endif %}
+    
+    <h1>{{ configuracion.nombre }}</h1>
+    <br>
+    
+    {% if configuracion.direccion %}
+        <h4> DIRECCION: &nbsp; {{ configuracion.direccion }}</h4>
+    {% endif %}
+
+    {% if configuracion.telefono %}
+        <h4> TELEFONO:&nbsp; {{ configuracion.telefono }}</h4>
+    {% endif %}
+
+    {% if configuracion.cuit %}
+        <h4> CUIT: &nbsp; {{ configuracion.cuit }}</h4>
+    {% endif %}
+
+    
+    {% if configuracion.alias %}
+    <h4> ALIAS </h4>
+    <h4><b>{{ configuracion.alias }}</b></h4>
+    {% endif %}
+
+    {% if configuracion.contactos %}
+        <h3 style="margin: 0px;"> {{ configuracion.contactos }}</h3>
+    {% endif %}
+    
+    <hr>
+    <p style="margin-bottom: 0;">Nº Venta: {{ venta.id }}</p>  
+    <p style="margin: 0;">Cliente: {{ venta.cliente }}</p>
+    <p style="margin: 0;">Cajero: {{ venta.nombre_factura }}</p>
+    <p style="margin: 0;">Fecha: {{ venta.fecha }}</p>
+
+    <hr>
+    <h2>Detalles de la Venta:</h2>
+    <ul>
+        {% for detalle in venta.detalleventa_set.all %}
+
+            {% if detalle.producto.fabricacion_propia %}
+                <li>{{ detalle.producto.fabricacion_propia.Nombre }}</li>
+            {% else %}
+                {% if detalle.producto.descripcion %}
+                <li>{{ detalle.producto.nombre }} {{ detalle.producto.descripcion }} x {{ detalle.cantidad_producto|floatformat:0 }}</li>
+                {% else %}
+                <li>{{ detalle.producto.nombre }} x {{ detalle.cantidad_producto|floatformat:0 }}</li>
+                {% endif %}
+            {% endif %}
+
+
+            {% if detalle.unidad_de_medida == "Mt2s" %}
+                <li><b>Cant:</b> {{ detalle.cantidad|floatformat:0 }} x {{ detalle.base }} x {{ detalle.altura }}  {{ detalle.unidad_de_medida }}</li>
+            {% else %}
+                <li><b>Cant:</b>{{ detalle.cantidad|floatformat:0 }} {{ detalle.unidad_de_medida }} </li>
+            {% endif %}
+
+            <li><b>Precio x {{detalle.unidad_de_medida}} :</b>{{ detalle.moneda }} {{ detalle.precio|floatformat:2|intcomma }}</li>
+            
+            <li><b>Subtotal: {{ detalle.moneda }}:</b>{{ detalle.get_total|floatformat:2|intcomma }}</li>
+            <hr>
+        {% endfor %}
+        
+    </ul>
+
+    <p class="total">Total {{ configuracion.Moneda }}: <b style="color: rgb(0, 0, 0); font-size: 14px;">{{ venta.get_cart_total|floatformat:2|intcomma }}</b></p>
+    <p>Sus pagos:</p>
+    {% for pago in medios_de_pago %}
+        {% if pago.total > 0 %}
+            <p class="total pt-0" >{{ pago.medio_de_pago.Nombre }} : {{ configuracion.Moneda }} <b style="color: rgb(0, 0, 0); font-size: 14px;">{{ pago.total|floatformat:2|intcomma }}</b></p>
+        {% endif %}
+    {% endfor %}
+
+    <p> <b>¡Gracias por su compra!</b></p>
+</body>
+</html>

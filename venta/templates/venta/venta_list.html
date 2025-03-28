@@ -1,0 +1,132 @@
+{% extends 'core/base.html' %}
+{% load humanize %}
+{% block content %}
+
+<div class="container" style="min-height: 100vh;">
+    <div class="" style="text-align: start;">
+        <h1 class="text-light p-3" style="margin-top: 70px;"><b></b></h1>
+    </div>
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0"><i class="fas fa-shopping-cart"></i> Lista de Ventas</h3>
+        </div>
+        <div class="card-body">
+            <!-- Sección de filtros -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <form method="GET" action="" class="mb-0">
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <label for="desde" class="form-label"><b>Desde</b></label>
+                                <input type="date" id="desde" name="desde" class="form-control" value="{{ desde|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <label for="hasta" class="form-label"><b>Hasta</b></label>
+                                <input type="date" id="hasta" name="hasta" class="form-control" value="{{ hasta|date:'Y-m-d'}}">
+                            </div>
+                            {% if configuracion.entrega %}
+                            <div class="col-12 col-sm-6 col-md-3">
+                                <label for="entregado" class="form-label"><b>Entregado</b></label>
+                                <select id="entregado" name="entregado" class="form-control">
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            {% endif %}
+                            <div class="col-12 col-sm-6 col-md-{% if configuracion.entrega %}3{% else %}6{% endif %} d-flex align-items-end">
+                                <button type="submit" class="btn btn-dark w-100">Filtrar</button>
+                            </div>
+                            {% if total_rango %}
+                            <div class="col-12 col-md-6 mt-4">
+                                <div class="card border-0">
+                                    <div class="card-body">
+                                        <h4 class="text-dark mb-1">Total</h4>
+                                        <h4 class="text-danger mb-0"><b>$ {{ total_rango|intcomma }}</b></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabla responsiva -->
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="bg-dark text-light">
+                        <tr>
+                            <th scope="col"># Venta</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total</th> 
+                            <th scope="col">Estado</th>
+                            {% if configuracion.entrega == True %}
+                            <th scope="col">Entregado</th>
+                            {% endif %}
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venta in venta_list %}
+                            {% if venta.detalleventa_set.all %}
+                                <tr>
+                                    <td class="text-dark"><b>#{{ venta.pk }}</b></td>
+                                    <td>{{ venta.get_date }}</td>
+                                    <td>{% if venta.cliente == None %}Cons. Final{% else %}{{ venta.cliente }}{% endif %}</td>
+                                    <td>{{ venta.get_cart_items|floatformat:0 }}</td>
+                                    <td>$ {{ venta.get_cart_total|intcomma }}</td>
+                                    <td>
+                                        {% if venta.estado == 1 %}Pagada{% endif %}
+                                        {% if venta.estado == 2 %}Facturada{% endif %}
+                                        {% if venta.estado == 3 %}Finalizada{% endif %}
+                                        {% if venta.estado == 5 %}Anulada{% endif %}
+                                    </td>
+                                    {% if configuracion.entrega == True %}
+                                        <td>{% if venta.entregado == True %}Entregada{% else %}Pendiente Entrega{% endif %}</td>
+                                    {% endif %}
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            {% if venta.estado != 5 %}
+                                                <a class="btn btn-danger btn-sm" href="{% url 'venta:anular' venta.id %}">Anular</a>
+                                            {% endif %}
+                                            
+                                            <a class="btn btn-success btn-sm" href="{% url 'venta:imprimir_ticket' venta.id %}">Imprimir</a>
+
+                                            {% if configuracion.entrega == True %} 
+                                                {% if venta.entregado == False %}
+                                                    <a class="btn btn-primary btn-sm" href="{% url 'venta:entregar_venta' venta.id %}">Entregar</a>
+                                                {% endif %}   
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function getCurrentDateFormatted() {
+  const today = new Date();
+  const currentDateFormatted = today.toISOString().split('T')[0];
+  return currentDateFormatted;
+}
+
+function setDefaultDates() {
+  const fechaDesdeInput = document.getElementById('desde');
+  const fechaHastaInput = document.getElementById('hasta');
+
+  fechaDesdeInput.value = getCurrentDateFormatted();
+  fechaHastaInput.value = getCurrentDateFormatted();
+}
+
+// Llama a la función para configurar los valores predeterminados cuando se cargue la página
+setDefaultDates();
+</script>
+{% endblock %}
